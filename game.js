@@ -1,7 +1,7 @@
 function deepcopy(current_array) {
     var new_array = [];
     for (var i = 0; i < current_array.length; i++) {
-        new_array[i] = currentArray[i].slice();
+        new_array[i] = current_array[i].slice();
     }
     return new_array
 }
@@ -91,7 +91,7 @@ class Game {
     merge_tiles() {
         var tm = this.tile_matrix
         for (var i = 0; i < this.board_size; i++) {
-            for (var j = 0; j < this.board_size - 1; j++) {
+            for (var k = 0; k < this.board_size - 1; k++) {
                 if (tm[i][k] == tm[i][k + 1] && tm[i][k] != 0) {
                     tm[i][k] = tm[i][k] * 2
                     tm[i][k + 1] = 0
@@ -143,21 +143,21 @@ class Game {
     }
     
     can_move() {
-        var tm = self.tile_matrix
+        var tm = this.tile_matrix
         for (var i = 0; i < this.board_size; i++) {
             for (var j = 1; j < this.board_size; j++) {
                 if (tm[i][j-1] == 0 && tm[i][j] > 0) {
-                    return True
+                    return true;
                 } else if ((tm[i][j-1] == tm[i][j]) && tm[i][j-1] != 0) {
-                    return True
+                    return true;
                 }
             }
         }
-        return False
+        return false;
     }
     
-    game_over() {
-        var found_dir = false
+   game_over() {
+        var found_dir = false;
         for (var i = 0; i < 4; i++) {
             this.rotate_matrix_clockwise();
             if (this.can_move()) {
@@ -197,6 +197,3 @@ class Game {
         return [this.tile_matrix, this.score]
     }
 }
-
-var game = new Game()
-console.log(game.get_state())
