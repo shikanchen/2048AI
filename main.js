@@ -1,5 +1,4 @@
-var game = new Game();
-var [board, score] = game.get_state();
+var game = new Game();
 $(document).ready(function(){
     prepareForMobile();
         $("body").bind("touchmove", function(e){
@@ -37,7 +36,9 @@ function newgame(){
             gridCell.css('top', getPosTop( i , j ) );
             gridCell.css('left', getPosLeft( i , j ) );
         }
-
+    
+    game.reset();
+    [board, score] = game.get_state();
     updateBoardView();
 }
 
