@@ -1,6 +1,6 @@
 function deepcopy(current_array) {
-    var new_array = [];
-    for (var i = 0; i < current_array.length; i++) {
+    let new_array = [];
+    for (let i = 0; i < current_array.length; i++) {
         new_array[i] = current_array[i].slice();
     }
     return new_array
@@ -11,12 +11,12 @@ function add(accumulator, a) {
 }
 
 function getRandomInt(min, max) {
-    var min = Math.ceil(min);
-    var max = Math.floor(max);
+    min = Math.ceil(min);
+    max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min);
 }
 
-// NOTE: Do not modify.
+
 class Game {
     constructor(init_tile_matrix = null, init_score = 0) {
         this.board_size = 4;
@@ -38,9 +38,9 @@ class Game {
     }
     
     new_tile_matrix() {
-        var _tile_matrix = [];
-        for (var i = 0; i < this.board_size; i++) {
-            var _ = [];
+        let _tile_matrix = [];
+        for (let i = 0; i < this.board_size; i++) {
+            let _ = [];
             for (var j = 0; j < this.board_size; j++) {
                 _.push(0);
             }
@@ -58,9 +58,9 @@ class Game {
 
     // moves in the specified direction
     move(direction) {
-        var moved = false;
-        this.addToUndo();
-        for (var i = 0; i < direction; i++) {
+        let moved = false;
+//      this.addToUndo();
+        for (let i = 0; i < direction; i++) {
             this.rotate_matrix_clockwise();
         }
         if (this.can_move()) {
@@ -68,7 +68,7 @@ class Game {
             this.merge_tiles();
             moved = true;
         }
-        for (var i = 0; i < (4 - direction) % 4; i++) {
+        for (let i = 0; i < (4 - direction) % 4; i++) {
             this.rotate_matrix_clockwise();
         }
         return moved
@@ -76,10 +76,10 @@ class Game {
     
     move_tiles() {
         var tm = this.tile_matrix
-        for (var i = 0; i < this.board_size; i++) {
-            for (var j = 0; j < this.board_size - 1; j++) {
+        for (let i = 0; i < this.board_size; i++) {
+            for (let j = 0; j < this.board_size - 1; j++) {
                 while (tm[i][j] == 0 && tm[i].slice(j).reduce(add, 0) > 0) {
-                    for (var k = j; k < this.board_size - 1; k++) {
+                    for (let k = j; k < this.board_size - 1; k++) {
                         tm[i][k] = tm[i][k + 1]
                     }
                     tm[i][this.board_size - 1] = 0
@@ -89,9 +89,9 @@ class Game {
     }
     
     merge_tiles() {
-        var tm = this.tile_matrix
-        for (var i = 0; i < this.board_size; i++) {
-            for (var k = 0; k < this.board_size - 1; k++) {
+        let tm = this.tile_matrix
+        for (let i = 0; i < this.board_size; i++) {
+            for (let k = 0; k < this.board_size - 1; k++) {
                 if (tm[i][k] == tm[i][k + 1] && tm[i][k] != 0) {
                     tm[i][k] = tm[i][k] * 2
                     tm[i][k + 1] = 0
@@ -103,9 +103,11 @@ class Game {
     }
     
     place_random_tile() {
+        let i = 0
+        let j = 0
         while (true) {
-            var i = getRandomInt(0, this.board_size-1);
-            var j = getRandomInt(0, this.board_size-1);
+            i = getRandomInt(0, this.board_size-1);
+            j = getRandomInt(0, this.board_size-1);
             if (this.tile_matrix[i][j] == 0){
                 break;
             }
@@ -116,7 +118,7 @@ class Game {
     
     undo() {
         if (this.undoMat.length > 0) {
-            var m = this.undoMat.pop()
+            let m = this.undoMat.pop()
             this.tile_matrix = m[0]
             this.score = m[1]
         }
@@ -127,13 +129,13 @@ class Game {
     }
     
     rotate_matrix_clockwise() {
-        var tm = this.tile_matrix
-        for (var i = 0; i < parseInt(this.board_size/2); i++) {
-            for (var k = i; k < this.board_size - i - 1; k++) {
-                var temp1 = tm[i][k]
-                var temp2 = tm[this.board_size - 1 - k][i]
-                var temp3 = tm[this.board_size - 1 - i][this.board_size - 1 - k]
-                var temp4 = tm[k][this.board_size - 1 - i]
+        let tm = this.tile_matrix
+        for (let i = 0; i < parseInt(this.board_size/2); i++) {
+            for (let k = i; k < this.board_size - i - 1; k++) {
+                let temp1 = tm[i][k]
+                let temp2 = tm[this.board_size - 1 - k][i]
+                let temp3 = tm[this.board_size - 1 - i][this.board_size - 1 - k]
+                let temp4 = tm[k][this.board_size - 1 - i]
                 tm[this.board_size - 1 - k][i] = temp1
                 tm[this.board_size - 1 - i][this.board_size - 1 - k] = temp2
                 tm[k][this.board_size - 1 - i] = temp3
@@ -143,9 +145,9 @@ class Game {
     }
     
     can_move() {
-        var tm = this.tile_matrix
-        for (var i = 0; i < this.board_size; i++) {
-            for (var j = 1; j < this.board_size; j++) {
+        let tm = this.tile_matrix
+        for (let i = 0; i < this.board_size; i++) {
+            for (let j = 1; j < this.board_size; j++) {
                 if (tm[i][j-1] == 0 && tm[i][j] > 0) {
                     return true;
                 } else if ((tm[i][j-1] == tm[i][j]) && tm[i][j-1] != 0) {
@@ -157,8 +159,8 @@ class Game {
     }
     
    game_over() {
-        var found_dir = false;
-        for (var i = 0; i < 4; i++) {
+        let found_dir = false;
+        for (let i = 0; i < 4; i++) {
             this.rotate_matrix_clockwise();
             if (this.can_move()) {
                 found_dir = true;
@@ -181,9 +183,9 @@ class Game {
     
     
     get_open_tiles() {
-        var tiles = []
-        for (var i = 0; i < this.board_size; i++) {
-            for (var j = 0; j < this.board_size; j++) {
+        let tiles = []
+        for (let i = 0; i < this.board_size; i++) {
+            for (let j = 0; j < this.board_size; j++) {
                 if (this.tile_matrix[i][j] == 0) {
                     tiles.push([i,j])
                 }

@@ -69,3 +69,8 @@ header p{
 
     position:absolute;
 }
+
+#gamecanvas {
+    width: 95%;
+    height: 95%;
+}

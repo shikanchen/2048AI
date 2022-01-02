@@ -1,4 +1,14 @@
-var game = new Game();
+game = new Game();
+
+DEBUG = true
+
+if (DEBUG){
+    var script=document.createElement('script');
+    script.src='https://rawgit.com/paulirish/memory-stats.js/master/bookmarklet.js';
+    document.head.appendChild(script);
+}
+
+
 $(document).ready(function(){
     prepareForMobile();
         $("body").bind("touchmove", function(e){
@@ -29,32 +39,34 @@ function prepareForMobile(){
 }
 
 function newgame(){
-    for( var i = 0 ; i < 4 ; i ++ )
-        for( var j = 0 ; j < 4 ; j ++ ){
+    for( let i = 0 ; i < 4 ; i ++ )
+        for( let j = 0 ; j < 4 ; j ++ ){
 
-            var gridCell = $('#grid-cell-'+i+"-"+j);
+            let gridCell = $('#grid-cell-'+i+"-"+j);
             gridCell.css('top', getPosTop( i , j ) );
             gridCell.css('left', getPosLeft( i , j ) );
         }
     
     game.reset();
     [board, score] = game.get_state();
-    updateBoardView();
+    updateBoardView(true);
 }
 
-function updateBoardView(){
+function updateBoardView(init=false){
 
-    $(".number-cell").remove();
-    for( var i = 0 ; i < 4 ; i ++ )
-        for( var j = 0 ; j < 4 ; j ++ ){
-            $("#grid-container").append( '<div class="number-cell" id="number-cell-'+i+'-'+j+'"></div>' );
-            var theNumberCell = $('#number-cell-'+i+'-'+j);
-
-            if( board[i][j] == 0 ){
+    for( let i = 0 ; i < 4 ; i ++ )
+        for( let j = 0 ; j < 4 ; j ++ ){
+            if ( init ){
+                $("#grid-container").append( '<div class="number-cell" id="number-cell-'+i+'-'+j+'"></div>' );
+            }
+            let theNumberCell = $('#number-cell-'+i+'-'+j);
+            
+            if ( board[i][j] == 0 ){
                 theNumberCell.css('width','0px');
                 theNumberCell.css('height','0px');
                 theNumberCell.css('top',getPosTop(i,j) + cellSideLength/2 );
                 theNumberCell.css('left',getPosLeft(i,j) + cellSideLength/2 );
+                theNumberCell.text('');
             }
             else{
                 theNumberCell.css('width',cellSideLength);
@@ -65,11 +77,29 @@ function updateBoardView(){
                 theNumberCell.css('color',getNumberColor( board[i][j] ) );
                 theNumberCell.text( board[i][j] );
             }
-
+            
         }
 
     $('.number-cell').css('line-height',cellSideLength+'px');
     $('.number-cell').css('font-size',0.6*cellSideLength+'px');
+}
+
+function createColorForNumber(num){
+    let color = { r:256,g:256,b:256}
+    let dec = 64;
+    while(num > 1){
+        num /= 2;
+        if(color.b > 0) color.b -= dec;
+        else if(color.g > 0) {
+            color.g -= dec;
+        }
+        else if(color.r > 0) {
+            color.r -= dec;
+            color.g = 256;
+        }
+    }
+    return "rgb("+color.r+","+color.g+","+color.b+")";
+    
 }
 
 function updateScore() {
@@ -77,7 +107,7 @@ function updateScore() {
 }
 
 $(document).keydown( function( event ){
-    event.preventDefault();
+//  event.preventDefault();
     switch( event.keyCode ){
         case 37: //left
             game.move_and_place(0)
@@ -95,7 +125,7 @@ $(document).keydown( function( event ){
             break;
     }
     [board, score] = game.get_state()
-    console.log(board)
+//  console.log(board)
     updateBoardView()
     updateScore()
     if (game.game_over()) {
