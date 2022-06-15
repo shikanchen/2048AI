@@ -11,9 +11,9 @@ if (DEBUG){
 
 $(document).ready(function(){
     prepareForMobile();
-        $("body").bind("touchmove", function(e){
-        e.preventDefault();
-    });
+//      $("body").bind("touchmove", function(e){
+//      e.preventDefault();
+//  });
     newgame();
 });
 
@@ -38,22 +38,26 @@ function prepareForMobile(){
     $('.number-cell').css('border-radius',0.02*cellSideLength);
 }
 
-function newgame(){
-    for( let i = 0 ; i < 4 ; i ++ )
-        for( let j = 0 ; j < 4 ; j ++ ){
-
-            let gridCell = $('#grid-cell-'+i+"-"+j);
-            gridCell.css('top', getPosTop( i , j ) );
-            gridCell.css('left', getPosLeft( i , j ) );
-        }
-    
+function newgame() {
     game.reset();
     [board, score] = game.get_state();
     updateBoardView(true);
 }
 
 function updateBoardView(init=false){
-
+    
+    if ( init ) {
+        $("#grid-container").empty()
+        for( let i = 0 ; i < 4 ; i ++ ) {
+            for( let j = 0 ; j < 4 ; j ++ ){
+                $("#grid-container").append( '<div class="grid-cell" id="grid-cell-'+i+'-'+j+'"></div>' );
+                let gridCell = $('#grid-cell-'+i+"-"+j);
+                gridCell.css('top', getPosTop( i , j ) );
+                gridCell.css('left', getPosLeft( i , j ) );
+            }
+        }
+    }
+    
     for( let i = 0 ; i < 4 ; i ++ )
         for( let j = 0 ; j < 4 ; j ++ ){
             if ( init ){

@@ -59,7 +59,7 @@ class Game {
     // moves in the specified direction
     move(direction) {
         let moved = false;
-//      this.addToUndo();
+        this.addToUndo();
         for (let i = 0; i < direction; i++) {
             this.rotate_matrix_clockwise();
         }
@@ -103,15 +103,17 @@ class Game {
     }
     
     place_random_tile() {
-        let i = 0
-        let j = 0
-        while (true) {
-            i = getRandomInt(0, this.board_size-1);
-            j = getRandomInt(0, this.board_size-1);
-            if (this.tile_matrix[i][j] == 0){
-                break;
+        let choices = []
+        for( let i = 0 ; i < this.board_size; i ++ ) {
+            for( let j = 0 ; j < this.board_size; j ++ ) {
+                if (this.tile_matrix[i][j] == 0){
+                    choices.push([i, j])
+                }
             }
         }
+        let choice = getRandomInt(0, choices.length);
+        let i = choices[choice][0];
+        let j = choices[choice][1];
         this.tile_matrix[i][j] = 2
         
     }
