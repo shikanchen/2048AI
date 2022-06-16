@@ -168,7 +168,7 @@ class Game {
                 found_dir = true;
             }
         }
-        return !found_dir
+        return !found_dir;
     }
     
     save_state(filename="savedata") {
@@ -189,15 +189,15 @@ class Game {
         for (let i = 0; i < this.board_size; i++) {
             for (let j = 0; j < this.board_size; j++) {
                 if (this.tile_matrix[i][j] == 0) {
-                    tiles.push([i,j])
+                    tiles.push([i,j]);
                 }
             }
         }
-        return tiles
+        return tiles;
     }
     
     
     get_state() {
-        return [this.tile_matrix, this.score]
+        return [this.tile_matrix, this.score];
     }
 }
