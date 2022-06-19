@@ -22,7 +22,7 @@ class Game {
         this.board_size = 4;
         this.reset(init_tile_matrix, init_score);
     }
-    
+
     // resets the game using the given initialization state and total points
     reset(init_tile_matrix = null, init_score = 0) {
         this.undoMat = [];
@@ -36,7 +36,7 @@ class Game {
         }
         this.board_size = this.tile_matrix.length;
     }
-    
+
     new_tile_matrix() {
         let _tile_matrix = [];
         for (let i = 0; i < this.board_size; i++) {
@@ -46,9 +46,9 @@ class Game {
             }
             _tile_matrix.push(_);
         }
-        return _tile_matrix
+        return _tile_matrix;
     }
-    
+
     // performs a move in the specified direction and places a random tile
     move_and_place(direction) {
         if (this.move(direction)) {
@@ -71,9 +71,9 @@ class Game {
         for (let i = 0; i < (4 - direction) % 4; i++) {
             this.rotate_matrix_clockwise();
         }
-        return moved
+        return moved;
     }
-    
+
     move_tiles() {
         var tm = this.tile_matrix
         for (let i = 0; i < this.board_size; i++) {
@@ -87,7 +87,7 @@ class Game {
             }
         }
     }
-    
+
     merge_tiles() {
         let tm = this.tile_matrix
         for (let i = 0; i < this.board_size; i++) {
@@ -101,7 +101,7 @@ class Game {
             }
         }
     }
-    
+
     place_random_tile() {
         let choices = []
         for( let i = 0 ; i < this.board_size; i ++ ) {
@@ -115,9 +115,9 @@ class Game {
         let i = choices[choice][0];
         let j = choices[choice][1];
         this.tile_matrix[i][j] = 2
-        
+
     }
-    
+
     undo() {
         if (this.undoMat.length > 0) {
             let m = this.undoMat.pop()
@@ -125,11 +125,11 @@ class Game {
             this.score = m[1]
         }
     }
-    
+
     addToUndo() {
         this.undoMat.push([deepcopy(this.tile_matrix), this.score])
     }
-    
+
     rotate_matrix_clockwise() {
         let tm = this.tile_matrix
         for (let i = 0; i < parseInt(this.board_size/2); i++) {
@@ -145,7 +145,7 @@ class Game {
             }
         }
     }
-    
+
     can_move() {
         let tm = this.tile_matrix
         for (let i = 0; i < this.board_size; i++) {
@@ -159,7 +159,7 @@ class Game {
         }
         return false;
     }
-    
+
    game_over() {
         let found_dir = false;
         for (let i = 0; i < 4; i++) {
@@ -170,20 +170,20 @@ class Game {
         }
         return !found_dir;
     }
-    
+
     save_state(filename="savedata") {
         return
     }
-    
+
     load_state(filename="savedata") {
         return
     }
-    
+
     load_state_line(line) {
         return
     }
-    
-    
+
+
     get_open_tiles() {
         let tiles = []
         for (let i = 0; i < this.board_size; i++) {
@@ -195,8 +195,8 @@ class Game {
         }
         return tiles;
     }
-    
-    
+
+
     get_state() {
         return [this.tile_matrix, this.score];
     }

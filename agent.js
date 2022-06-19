@@ -36,4 +36,4 @@ function getNumberColor( number ){
         return "#776e65";
 
     return "white";
-}
+}

@@ -11,9 +11,9 @@ if (DEBUG){
 
 $(document).ready(function(){
     prepareForMobile();
-//      $("body").bind("touchmove", function(e){
-//      e.preventDefault();
-//  });
+    $("body").bind("touchmove", function(e){
+        e.preventDefault();
+    });
     newgame();
 });
 
@@ -32,7 +32,7 @@ function prepareForMobile(){
     $('.grid-cell').css('width',cellSideLength);
     $('.grid-cell').css('height',cellSideLength);
     $('.grid-cell').css('border-radius',0.04*cellSideLength);
-    
+
     $('.number-cell').css('width',cellSideLength);
     $('.number-cell').css('height',cellSideLength);
     $('.number-cell').css('border-radius',0.02*cellSideLength);
@@ -41,11 +41,46 @@ function prepareForMobile(){
 function newgame() {
     game.reset();
     [board, score] = game.get_state();
-    updateBoardView(true);
+    updateBoardView(true);
+}
+
+//function auto_move(){
+//  ai = new AI(game.get_state());
+//  direction = ai.compute_decision();
+//  if (direction != null) {
+//      game.move_and_place(direction);
+//      [board, score] = game.get_state();
+//      updateBoardView();
+//      updateScore();
+//  }
+//  console.log(direction);
+//  return score;
+//}
+//
+//const auto = async () => {
+//  const score = await auto_move();
+//  // do something else here after firstFunction completes
+//  if (game.game_over()) {
+//      alert('Game over！Score：'+ score);
+//  }
+//}
+function auto() {
+    ai = new AI(game.get_state());
+    direction = ai.compute_decision();
+    if (direction != -1) {
+        game.move_and_place(direction);
+        [board, score] = game.get_state();
+        updateBoardView();
+        updateScore();
+    }
+    console.log(direction);
+    if (game.game_over()) {
+        alert('Game over！Score：'+ score);
+    }
 }
 
 function updateBoardView(init=false){
-    
+
     if ( init ) {
         $("#grid-container").empty()
         for( let i = 0 ; i < 4 ; i ++ ) {
@@ -57,14 +92,14 @@ function updateBoardView(init=false){
             }
         }
     }
-    
+
     for( let i = 0 ; i < 4 ; i ++ )
         for( let j = 0 ; j < 4 ; j ++ ){
             if ( init ){
                 $("#grid-container").append( '<div class="number-cell" id="number-cell-'+i+'-'+j+'"></div>' );
             }
             let theNumberCell = $('#number-cell-'+i+'-'+j);
-            
+
             if ( board[i][j] == 0 ){
                 theNumberCell.css('width','0px');
                 theNumberCell.css('height','0px');
@@ -81,7 +116,7 @@ function updateBoardView(init=false){
                 theNumberCell.css('color',getNumberColor( board[i][j] ) );
                 theNumberCell.text( board[i][j] );
             }
-            
+
         }
 
     $('.number-cell').css('line-height',cellSideLength+'px');
@@ -103,7 +138,7 @@ function createColorForNumber(num){
         }
     }
     return "rgb("+color.r+","+color.g+","+color.b+")";
-    
+
 }
 
 function updateScore() {
@@ -129,7 +164,6 @@ $(document).keydown( function( event ){
             break;
     }
     [board, score] = game.get_state()
-//  console.log(board)
     updateBoardView()
     updateScore()
     if (game.game_over()) {
