@@ -1,6 +1,7 @@
-game = new Game();
+let game = new Game();
 
-DEBUG = true
+let DEBUG = true
+let gameovered = false;
 
 if (DEBUG){
     var script=document.createElement('script');
@@ -40,11 +41,13 @@ function prepareForMobile(){
 
 function newgame() {
     game.reset();
+    gameovered = false;
     [board, score] = game.get_state();
     updateBoardView(true);
 }
 
-function auto() {
+function auto_move() {
+    console.log({} + [] + " = {} + []"); // run this it is actually funny
     ai = new AI(game.get_state());
     direction = ai.compute_decision();
     if (direction != -1) {
@@ -53,10 +56,18 @@ function auto() {
         updateBoardView();
         updateScore();
     }
-    console.log(direction);
+}
+
+function auto() {
     if (game.game_over()) {
+        gameovered = true;
         alert('Game over！Score：'+ score);
+        return;
     }
+    auto_move();
+    setTimeout(function() {
+        auto();
+    }, 50);
 }
 
 function updateBoardView(init=false){
@@ -146,7 +157,8 @@ $(document).keydown( function( event ){
     [board, score] = game.get_state()
     updateBoardView()
     updateScore()
-    if (game.game_over()) {
+    if (game.game_over() && !gameovered) {
+        gameovered = true;
         alert('Game over！Score：'+ score);
     }
 });
