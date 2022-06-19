@@ -59,7 +59,7 @@ function auto_move() {
 }
 
 function auto() {
-    if (game.game_over()) {
+    if (game.game_over() && !gameovered) {
         gameovered = true;
         alert('Game over！Score：'+ score);
         return;
