@@ -52,4 +52,37 @@ class AI {
             this.build_tree(child[1], depth+1)
         }
     }
+    
+    expectimax(node = null) {
+        if (node === null) {
+            node = this.root;
+        }
+        
+        if (node.is_terminal()) {
+            return [null, node.state[1]];
+        } else if (node.player_type === MAX_PLAYER) {
+            let best_direction = -1;
+            let value = -1;
+            for (child in node.children) {
+                if (this.expectimax(child[1])[1] > child[1]) {
+                    best_direction = child[0];
+                    value = child[1];
+                }
+            }
+            return [best_direction, value];
+        } else if (node.player_type === CHANCE_PLAYER) {
+            let value = 0;
+            for (child in node.children) {
+                value += this.expectimax(child[1])[1];
+            }
+            value /= node.children.length;
+            return [null, value];
+        }
+    }
+    
+    probability(node) {
+        return 0.0;
+    }
+    
+    
 }
