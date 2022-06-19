@@ -1,4 +1,3 @@
-//{0: 'up', 1: 'left', 2: 'down', 3: 'right'}
 const MOVES = [0, 1, 2, 3];
 const MAX_PLAYER = 0;
 const CHANCE_PLAYER = 1;
@@ -63,11 +62,10 @@ class AI {
         } else if (node.player_type === MAX_PLAYER) {
             let [best_direction, value] = [-1, -1];
             for (let [direction, child] of node.children) {
-                let new_value = this.expectimax(child);
-                if (new_value > value) {
+                let new_value = this.expectimax(child)[1];
+                if (new_value >= value) {
                     [best_direction, value] = [direction, new_value];
                 }
-                console.log(">>>", best_direction);
             }
             return [best_direction, value];
         } else if (node.player_type === CHANCE_PLAYER) {
@@ -75,7 +73,6 @@ class AI {
             for (let [_, child] of node.children) {
                 value += this.expectimax(child)[1];
             }
-            console.log("CHANCE_PLAYER", value, node.children.length)
             value /= node.children.length;
             return [null, value];
         }

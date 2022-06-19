@@ -44,26 +44,6 @@ function newgame() {
     updateBoardView(true);
 }
 
-//function auto_move(){
-//  ai = new AI(game.get_state());
-//  direction = ai.compute_decision();
-//  if (direction != null) {
-//      game.move_and_place(direction);
-//      [board, score] = game.get_state();
-//      updateBoardView();
-//      updateScore();
-//  }
-//  console.log(direction);
-//  return score;
-//}
-//
-//const auto = async () => {
-//  const score = await auto_move();
-//  // do something else here after firstFunction completes
-//  if (game.game_over()) {
-//      alert('Game over！Score：'+ score);
-//  }
-//}
 function auto() {
     ai = new AI(game.get_state());
     direction = ai.compute_decision();
