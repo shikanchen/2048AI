@@ -47,7 +47,6 @@ function newgame() {
 }
 
 function auto_move() {
-    console.log({} + [] + " = {} + []"); // run this it is actually funny
     ai = new AI(game.get_state());
     direction = ai.compute_decision();
     if (direction != -1) {

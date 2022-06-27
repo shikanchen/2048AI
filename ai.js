@@ -11,7 +11,7 @@ class Node {
     }
 
     is_terminal(){
-        return !this.children;
+        return this.children.length === 0;
     }
 }
 
@@ -22,7 +22,7 @@ class AI {
         this.simulator = new Game(...root_state);
     }
 
-    build_tree(node = null, depth = 0, ec = false) {
+    build_tree(node = null, depth = 0) {
         if (node === null) {
             node = this.root;
         }
@@ -63,7 +63,7 @@ class AI {
             let [best_direction, value] = [-1, -1];
             for (let [direction, child] of node.children) {
                 let new_value = this.expectimax(child)[1];
-                if (new_value >= value) {
+                if (new_value > value) {
                     [best_direction, value] = [direction, new_value];
                 }
             }
@@ -80,16 +80,16 @@ class AI {
 
     probability(node) {
         let _matrix = node.state[0];
-        let prob = 0;
+        let prob = 0.0;
         let tiles = [];
         for (let i = 0; i < _matrix.length; i++) {
             for (let j = 0; j < _matrix[i].length; j++) {
                 tiles.push([_matrix[i][j], i, j]);
             }
         }
-        tiles.sort();
+        tiles.sort((a, b) => b[0] - a[0]);
         tiles.reverse();
-        for (let idx = 0; idx < _matrix * 2; idx++) {
+        for (let idx = 0; idx < _matrix.length * 2; idx++) {
             let [tile, i, j] = tiles[idx];
             if (j < 1) {
                 prob += 1;
@@ -100,24 +100,36 @@ class AI {
         return prob;
     }
 
-//  superexpectimax(node = null) {
-//      if (node === null) {
-//          node = this.root;
-//      }
-//
-//      if (node.is_terminal()) {
-//          return [null, node.state[1]];
-//      } else if (node.player_type === MAX_PLAYER) {
-//          let [best_direction, value] = [-1, -1];
-//          for ([direction, child] of node.children) {
-//              [best_direction]
-//          }
-//      }
-//  }
+    superexpectimax(node = null) {
+        if (node === null) {
+            node = this.root;
+        }
+
+        if (node.is_terminal()) {
+            return [null, node.state[1]];
+        } else if (node.player_type === MAX_PLAYER) {
+            let [best_direction, value] = [-1, -1];
+            for (let [direction, child] of node.children) {
+                let new_value = this.probability(child) * this.expectimax(child)[1];
+                if ( new_value > value ) {
+                    [best_direction, value] = [direction, new_value];
+                }
+            }
+            return [best_direction, value];
+        } else if (node.player_type === CHANCE_PLAYER) {
+            let value = 0;
+            for (let [_, child] of node.children) {
+                value += this.probability(child) * this.expectimax(child)[1];
+            }
+            value /= node.children.length;
+            return [null, value];
+        }
+    }
 
     compute_decision() {
         this.build_tree();
         let [direction, _] = this.expectimax(this.root);
+//      let [direction, _] = this.superexpectimax(this.root);
         return direction;
     }
 }
